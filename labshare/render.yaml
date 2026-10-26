@@ -1,0 +1,24 @@
+# Render Blueprint - New > Blueprint > pick your GitHub repo.
+# Uses a persistent disk, which needs a paid instance (Starter).
+# Want the FREE plan instead? See "Free plan" in README.md.
+services:
+  - type: web
+    name: labshare
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 1 --threads 4 --timeout 120 --bind 0.0.0.0:$PORT
+    healthCheckPath: /health
+    disk:
+      name: labshare-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: DATA_DIR
+        value: /var/data
+      - key: LABSHARE_SECRET   # encrypts every file - back it up!
+        generateValue: true
+      - key: ADMIN_PASSWORD    # read it in Dashboard > Environment
+        generateValue: true

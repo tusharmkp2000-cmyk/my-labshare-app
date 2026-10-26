@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ f.title }}</h1>
+<p class="sub" style="--h: {{ f.subject|hue }}"><span class="tag">{{ f.subject }}</span> {{ f.filename }} &middot; uploaded {{ f.uploaded_at }}</p>
+<dl class="facts">
+  <div><dt>Size</dt><dd>{{ f.size|fmt }}</dd></div>
+  <div><dt>Encrypted size</dt><dd>{{ f.enc_size|fmt }}</dd></div>
+  <div><dt>Chunks</dt><dd>{{ f.chunks }}</dd></div>
+  <div><dt>Downloads</dt><dd>{{ f.downloads }}</dd></div>
+</dl>
+<div class="actions">
+  <a class="btn" href="{{ url_for('download', fid=f.id) }}">Download</a>
+  <a class="btn ghost" href="{{ url_for('download_enc', fid=f.id) }}">Download encrypted (.enc)</a>
+  {% if admin %}
+  <form method="post" action="{{ url_for('delete', fid=f.id) }}" onsubmit="return confirm('Delete this file for good?')">
+    <input type="hidden" name="csrf" value="{{ csrf }}"><button class="danger">Delete</button>
+  </form>
+  {% endif %}
+</div>
+<h2>Stored chunks</h2>
+<table>
+  <tr><th>Chunk</th><th>Size</th></tr>
+  {% for name, size in chunks %}<tr><td>{{ name }}</td><td>{{ size|fmt }}</td></tr>{% endfor %}
+</table>
+{% endblock %}

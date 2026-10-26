@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Lab notes, manuals and slides</h1>
+<form class="search" method="get">
+  <input name="q" value="{{ q }}" placeholder="Search title, subject or file name">
+  <select name="subject">
+    <option value="">All subjects</option>
+    {% for s in subjects %}<option {{ 'selected' if s == subject }}>{{ s }}</option>{% endfor %}
+  </select>
+  <button>Search</button>
+</form>
+
+<ul class="list">
+{% for f in files %}
+  <li style="--h: {{ f.subject|hue }}">
+    <div>
+      <a class="title" href="{{ url_for('details', fid=f.id) }}">{{ f.title }}</a>
+      <div class="sub">{{ f.subject }} &middot; {{ f.filename }} &middot; {{ f.size|fmt }} &middot; {{ f.downloads }} downloads</div>
+    </div>
+    <a class="btn" href="{{ url_for('download', fid=f.id) }}">Download</a>
+  </li>
+{% else %}
+  <li class="empty">
+    {% if q or subject %}Nothing matches that search. Try a shorter word or clear the subject.
+    {% else %}No resources yet. Log in as admin and upload the first one.{% endif %}
+  </li>
+{% endfor %}
+</ul>
+{% endblock %}

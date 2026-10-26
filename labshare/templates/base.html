@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LabShare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="{{ url_for('home') }}">LabShare</a>
+  <nav>
+    {% if admin %}
+      <a href="{{ url_for('upload') }}">Upload</a>
+      <a href="{{ url_for('logout') }}">Log out</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Admin log in</a>
+    {% endif %}
+  </nav>
+</header>
+<main>
+  {% for cat, text in get_flashed_messages(with_categories=true) %}
+    <p class="flash {{ 'bad' if cat == 'error' else '' }}">{{ text }}</p>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</main>
+<footer>Every file is encrypted with AES-256 and stored in 1 MB chunks.</footer>
+</body>
+</html>
